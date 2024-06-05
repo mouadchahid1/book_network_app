@@ -1,0 +1,26 @@
+server:
+  port: 8089
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: root
+    password: root
+    url: jdbc:postgresql://localhost:5432/booknetwork
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+  mail:
+    host: localhost
+    port: 1025
+    username: mouad
+    password: mouad
+    properties:
+      mail:
+        smtp:
+          trust : "*"
+        auth : true
