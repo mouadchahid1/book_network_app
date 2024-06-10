@@ -19,9 +19,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
-    private JwtAuthFilter jwtAuthFilter;
+    private final JwtFilter jwtAuthFilter;
     String[] AUTH_WHITELIST = {
-            "auth/**",
+            "/auth/**",
             "/v3/api-docs",
             "/v2/api-docs",
             "/v3/api-docs/**",
@@ -36,7 +36,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.cors(Customizer.withDefaults())
+       http.cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request.
                         requestMatchers(AUTH_WHITELIST).permitAll()
@@ -45,6 +45,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(
                         SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 }

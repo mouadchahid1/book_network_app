@@ -1,10 +1,7 @@
 package tech.mouad.book.user;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -23,6 +20,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "t_users")
 @EntityListeners(AuditingEntityListener.class)
@@ -89,7 +87,7 @@ public class User implements UserDetails, Principal {
         return enabled;
     }
 
-    private String fullName() {
+    public String fullName() {
         return getFirstName() + " " + getLastName();
     }
 }
