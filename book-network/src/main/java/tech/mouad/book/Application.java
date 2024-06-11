@@ -12,6 +12,7 @@ import tech.mouad.book.role.RoleRepository;
 @SpringBootApplication
 @EnableJpaAuditing // pour que Entity listner de autditing puisse bien travail .
 @EnableAsync
+
 public class Application {
 
 	public static void main(String[] args) {
