@@ -8,6 +8,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import tech.mouad.book.book.Book;
+import tech.mouad.book.bookTransactionHistory.BookTransactionHistory;
 import tech.mouad.book.role.Role;
 
 import java.security.Principal;
@@ -36,9 +38,16 @@ public class User implements UserDetails, Principal {
     private String password;
     private boolean accountLocked;
     private boolean enabled;
+    //Role relation ship
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
-
+    // book relation
+    @OneToMany(mappedBy = "owner")
+    private List<Book> books;
+    // Book TransactionHistory;
+    @OneToMany(mappedBy = "user")
+    private List<BookTransactionHistory> bookTransactionHistories;
+    // Auditing
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdDate;
