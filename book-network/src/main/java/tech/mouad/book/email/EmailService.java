@@ -50,6 +50,7 @@ public class EmailService {
 
         String template = templateEngine.process(templateName, context);
         helper.setText(template, true);
+        // envoie le mail avec tout les infos .
         mailSender.send(mimeMessage);
     }
 }

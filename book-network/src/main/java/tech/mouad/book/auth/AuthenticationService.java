@@ -8,7 +8,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import tech.mouad.book.email.EmailService;
 import tech.mouad.book.email.EmailTemplateName;
 import tech.mouad.book.role.RoleRepository;
@@ -97,10 +96,10 @@ public class AuthenticationService {
         var jwt = jwtService.generateToken(claims, user);
         return AuthenticateResponseDto.builder().token(jwt).build();
     }
-     // il ne faut pas qu il sois transaction
+
+    // il ne faut pas qu il sois transaction
     public void activateAccount(String token) throws MessagingException {
         Token savedtoken = tokenRepository.findByToken(token)
-                //todo better generation exception
                 .orElseThrow(() -> new RuntimeException("The Token is not valid"));
         if (LocalDateTime.now().isAfter(savedtoken.getExpiredAt())) {
             sendValidationEmail(savedtoken.getUser());

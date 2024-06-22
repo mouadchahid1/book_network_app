@@ -1,5 +1,6 @@
 package tech.mouad.book.auth;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+// todo continue the video on 3:34:00
+@Tag(name = "Authentication")
 public class authenticationController {
     private final AuthenticationService authenticationService;
 

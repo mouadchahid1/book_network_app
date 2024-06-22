@@ -32,6 +32,7 @@ public class JwtService {
 
         return buildToken(claims, userDetails, jwtExpiration);
     }
+
     public String buildToken(Map<String, Object> extrasClaims, UserDetails userDetails, long jwtExpiration) {
         var authorities = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
         Instant now = Instant.now();
@@ -44,9 +45,27 @@ public class JwtService {
                 .signWith(getSignKey())
                 .compact();
     }
+
     private SecretKey getSignKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public String extractUserName(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    public <T> T extractClaim(String token, Function<Claims, T> claimResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimResolver.apply(claims);
+    }
+
+    private Claims extractAllClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(getSignKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
@@ -59,26 +78,8 @@ public class JwtService {
     }
 
     private Date extractExpiration(String token) {
-        return extractClaim(token,Claims::getExpiration);
+        return extractClaim(token, Claims::getExpiration);
     }
-
-    public String extractUserName(String token) {
-        return extractClaim(token, Claims::getSubject);
-    }
-
-    public <T> T extractClaim(String token, Function<Claims, T> claimResolver) {
-      final Claims claims= extractAllClaims(token);
-      return claimResolver.apply(claims);
-    }
-
-    private Claims extractAllClaims(String token) {
-            return Jwts.parser()
-                    .verifyWith(getSignKey())
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
-    }
-
 
 
 }
