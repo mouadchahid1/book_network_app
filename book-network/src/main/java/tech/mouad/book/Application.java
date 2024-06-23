@@ -10,7 +10,8 @@ import tech.mouad.book.role.Role;
 import tech.mouad.book.role.RoleRepository;
 
 @SpringBootApplication
-@EnableJpaAuditing // pour que Entity listner de autditing puisse bien travail .
+// ici je mais le non de Bean qui est le nom de la methode par default
+@EnableJpaAuditing(auditorAwareRef = "auditorAware") // pour que Entity listner de autditing puisse bien travail .
 @EnableAsync
 
 public class Application {
