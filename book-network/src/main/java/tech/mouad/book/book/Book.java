@@ -1,9 +1,6 @@
 package tech.mouad.book.book;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,18 +20,42 @@ import java.util.List;
 @Getter
 @Setter
 public class Book extends BaseEntity {
+    @Column(columnDefinition = "nvarchar")
     private String title;
+
+    @Column(columnDefinition = "nvarchar")
     private String authorName;
+
+    @Column(columnDefinition = "nvarchar")
     private String isbn;
+
+    @Column(columnDefinition = "nvarchar")
     private String synopsis;
+
+    @Column(columnDefinition = "nvarchar")
     private String bookCover;
     private boolean archived;
     private boolean shareable;
+
     @OneToMany(mappedBy = "book")
     private List<FeedBack> feedBacks;
+
+
     @ManyToOne()
     @JoinColumn(name = "owner_id")
-    private User owner ;
-     @OneToMany(mappedBy = "book")
+    private User owner;
+
+
+    @OneToMany(mappedBy = "book")
     private List<BookTransactionHistory> bookTransactionHistories;
+
+    public double getRate() {
+        // always check if is null or empty ;
+        if (feedBacks == null || feedBacks.isEmpty()) {
+            return 0.0;
+        }
+        double average = feedBacks.stream().mapToDouble(FeedBack::getNote)
+                .average().orElse(0.0);
+        return Math.round((average * 10.0) / 10.0);
+    }
 }
