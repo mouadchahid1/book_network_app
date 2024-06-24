@@ -13,6 +13,7 @@ import tech.mouad.book.common.PageResponse;
 @RequestMapping("/books")
 @Tag(name = "Book", description = "Book Controller implementation")
 public class BookController {
+
     private final BookService bookService;
 
     @PostMapping("")
@@ -40,10 +41,53 @@ public class BookController {
 
     @GetMapping("/owner")
     public ResponseEntity<PageResponse<BookResponse>> getAllBooksOwner(
-            @RequestParam(name = "page",defaultValue = "0" ,required = false)short page ,
-            @RequestParam(name = "size",defaultValue ="10",required = false) byte size ,
+            @RequestParam(name = "page", defaultValue = "0", required = false) short page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) byte size,
             Authentication currentUser
     ) {
-        return ResponseEntity.ok(bookService.findAllBooksOwner(page,size,currentUser));
+        return ResponseEntity.ok(bookService.findAllBooksOwner(page, size, currentUser));
+    }
+
+    @GetMapping("/borrowed")
+    public ResponseEntity<PageResponse<BorrowedBookResponse>> findAllBorrowedBooks(
+            @RequestParam(name = "page", defaultValue = "0", required = false) short page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) byte size,
+            Authentication currentUser) {
+
+        return ResponseEntity.ok(bookService.findAllBorrowedBooks(page, size, currentUser));
+    }
+
+    @GetMapping("/returned")
+    public ResponseEntity<PageResponse<BorrowedBookResponse>> findAllReturnedBooks(
+            @RequestParam(name = "page", defaultValue = "0", required = false) short page,
+            @RequestParam(name = "size", defaultValue = "10", required = false) byte size,
+            Authentication currentUser
+    ) {
+        return ResponseEntity.ok(bookService.findAllReturnedBooks(page, size, currentUser));
+    }
+
+    @PatchMapping("/sharable/{book_id}")
+    public ResponseEntity<Integer>  updateSharableBook(
+            @PathVariable(name = "book_id") Integer bookId,
+            Authentication currentUser
+    ) {
+      return ResponseEntity.ok(bookService.updateSharableBook(bookId,currentUser));
+    }
+
+    @PatchMapping("/archived/{book_id}")
+    public ResponseEntity<Integer> updateArchivedStatus(
+            @PathVariable(name = "book_id") Integer book_id ,
+            Authentication currentUser
+    ) {
+    return ResponseEntity.ok(bookService.updateArchivedStatus(book_id,currentUser));
+    }
+
+    @PostMapping("/borrowBook/{book_id}")
+    public ResponseEntity<Integer> borrowBook(
+            @PathVariable(name = "book_id") Integer bookId,
+            Authentication currentUser
+    ) {
+      return ResponseEntity.ok(bookService.borrowBook(bookId,currentUser));
     }
 }
+

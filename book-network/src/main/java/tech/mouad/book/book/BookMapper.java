@@ -1,6 +1,7 @@
 package tech.mouad.book.book;
 
 import org.springframework.stereotype.Service;
+import tech.mouad.book.bookTransactionHistory.BookTransactionHistory;
 
 @Service
 
@@ -32,5 +33,19 @@ public class BookMapper {
                 //todo implement .cover
                 .build();
 
+    }
+
+
+
+    public BorrowedBookResponse toBorrowedBookResponse(BookTransactionHistory bookTransactionHistory) {
+        return BorrowedBookResponse.builder()
+                .id(bookTransactionHistory.getBook().getId())
+                .returned(bookTransactionHistory.isReturned())
+                .returnApproved(bookTransactionHistory.isReturnApproved())
+                .title(bookTransactionHistory.getBook().getTitle())
+                .authorName(bookTransactionHistory.getBook().getAuthorName())
+                .isbn(bookTransactionHistory.getBook().getIsbn())
+                .rate(bookTransactionHistory.getBook().getRate())
+                .build();
     }
 }

@@ -16,4 +16,13 @@ public interface BookRepository extends JpaRepository<Book, Integer>, JpaSpecifi
              book.owner != :userId
             """)
     Page<Book> findAllDisplayableBooks(Pageable pageable, Integer userId);
+
+     @Query("""
+              select (count(*)>0) as IsBorrow
+              from BookTransactionHistory history
+              where history.user.id =:userId
+              and history.book.id=:bookId
+              and history.returnApproved=false
+             """)
+    boolean isBookBorrow(Integer bookId, Integer userId);
 }
