@@ -1,12 +1,17 @@
 package tech.mouad.book.book;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import tech.mouad.book.common.PageResponse;
+
+import java.io.File;
 
 @RestController
 @RequiredArgsConstructor
@@ -67,19 +72,19 @@ public class BookController {
     }
 
     @PatchMapping("/sharable/{book_id}")
-    public ResponseEntity<Integer>  updateSharableBook(
+    public ResponseEntity<Integer> updateSharableBook(
             @PathVariable(name = "book_id") Integer bookId,
             Authentication currentUser
     ) {
-      return ResponseEntity.ok(bookService.updateSharableBook(bookId,currentUser));
+        return ResponseEntity.ok(bookService.updateSharableBook(bookId, currentUser));
     }
 
     @PatchMapping("/archived/{book_id}")
     public ResponseEntity<Integer> updateArchivedStatus(
-            @PathVariable(name = "book_id") Integer book_id ,
+            @PathVariable(name = "book_id") Integer book_id,
             Authentication currentUser
     ) {
-    return ResponseEntity.ok(bookService.updateArchivedStatus(book_id,currentUser));
+        return ResponseEntity.ok(bookService.updateArchivedStatus(book_id, currentUser));
     }
 
     @PostMapping("/borrowBook/{book_id}")
@@ -87,7 +92,33 @@ public class BookController {
             @PathVariable(name = "book_id") Integer bookId,
             Authentication currentUser
     ) {
-      return ResponseEntity.ok(bookService.borrowBook(bookId,currentUser));
+        return ResponseEntity.ok(bookService.borrowBook(bookId, currentUser));
+    }
+
+    @PatchMapping("/borrowed/returned/{book_id}")
+    public ResponseEntity<Integer> returnBorrowBook(
+            @PathVariable(name = "book_id") Integer bookId,
+            Authentication currentUser
+    ) {
+        return ResponseEntity.ok(bookService.returnBorrowBook(bookId, currentUser));
+    }
+
+    @PatchMapping("/borrowed/returned/approved/{book_id}")
+    public ResponseEntity<Integer> returnApprovedBorrowBook(
+            @PathVariable(name = "book_id") Integer bookId,
+            Authentication currentUser
+    ) {
+        return ResponseEntity.ok(bookService.returnApprovedBorrowBook(bookId, currentUser));
+
+    }
+
+    @PostMapping(value = "/cover/{book_id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadBookCover(
+            @PathVariable(name = "book_id")Integer bookId,
+            @Parameter() @RequestPart("file")MultipartFile file,
+            Authentication currentUser
+            ) {
+              bookService.uploadCoverBook(file,bookId,currentUser);
+             return ResponseEntity.accepted().build();
     }
 }
-

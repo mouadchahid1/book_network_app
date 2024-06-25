@@ -8,9 +8,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import tech.mouad.book.bookTransactionHistory.BookTransactionHistory;
 import tech.mouad.book.bookTransactionHistory.BookTransactionHistoryRepository;
 import tech.mouad.book.common.PageResponse;
+import tech.mouad.book.file.StorageFileService;
 import tech.mouad.book.user.User;
 
 import java.util.List;
@@ -22,7 +24,7 @@ public class BookService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
     private final BookTransactionHistoryRepository historyRepository;
-
+    private final StorageFileService storageFileService;
     public Integer saveBook(BookRequest bookRequest, Authentication currentUser) {
         User user = (User) currentUser.getPrincipal();
         Book book = bookMapper.toBook(bookRequest);
@@ -35,6 +37,12 @@ public class BookService {
         return bookRepository.findById(id).map(bookMapper::toBookResponse).orElseThrow(
                 () -> new EntityNotFoundException("Book not found with the id " + id)
         );
+
+    }
+
+    public Book findById(Integer bookId) {
+        return bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("The book doesn't exists with Id :" + bookId));
 
     }
 
@@ -99,8 +107,7 @@ public class BookService {
 
     public Integer updateSharableBook(Integer bookId, Authentication currentUser) {
         User user = (User) currentUser.getPrincipal();
-        Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("The book doesn't exits with id" + bookId));
+        Book book = findById(bookId);
         if (!Objects.equals(book.getOwner().getId(), user.getId())) {
             // apres chaque ajouter d'une nouvelle exception il faut lui ajouter dans les exception handle
             throw new OperationNotPermittedException("Only The owner can do this action");
@@ -113,8 +120,7 @@ public class BookService {
 
     public Integer updateArchivedStatus(Integer bookId, Authentication currentUser) {
         User user = (User) currentUser.getPrincipal();
-        Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("The book doesn't exits with id" + bookId));
+        Book book = findById(bookId);
         if (!Objects.equals(book.getOwner().getId(), user.getId())) {
             // apres chaque ajouter d'une nouvelle exception il faut lui ajouter dans les exception handle
             throw new OperationNotPermittedException("Only The owner can do this action");
@@ -132,8 +138,7 @@ public class BookService {
 //    }
 
     public Integer borrowBook(Integer bookId, Authentication currentUser) {
-        Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("The book doesn't exists with Id :" + bookId));
+        Book book = findById(bookId);
         User user = (User) currentUser.getPrincipal();
         // il faut que le book ne sois pas archive et ne sois pas
         if (book.isArchived() || !book.isShareable()) {
@@ -153,5 +158,50 @@ public class BookService {
                 .returned(false)
                 .build()).getId();
 
+    }
+
+    public Integer returnBorrowBook(Integer bookId, Authentication currentUser) {
+        // 1 check if the book exists
+        // 2 check if the book is not archived or no published
+        // 3 check if the borrowed book is not the book of the currentUser
+        // 4 check in the history that this user is already borrowed this book
+        // 5 update
+        Book book = findById(bookId);
+        User user = (User) currentUser.getPrincipal();
+        if (book.isArchived() || !book.isShareable()) {
+            throw new OperationNotPermittedException("YOU can not do this action the book is archived or is not shareable");
+        }
+        if (Objects.equals(book.getOwner().getId(), user.getId())) {
+            throw new OperationNotPermittedException("The owner can not borrow his book ");
+        }
+        BookTransactionHistory bookTransactionHistory = historyRepository.findByBookIdAndUserId(bookId, user.getId())
+                .orElseThrow(() -> new OperationNotPermittedException("The book is not borrowed by this user"));
+        bookTransactionHistory.setReturned(true);
+        return historyRepository.save(bookTransactionHistory).getId();
+
+    }
+
+    public Integer returnApprovedBorrowBook(Integer bookId, Authentication currentUser) {
+        Book book = findById(bookId);
+        User user = (User) currentUser.getPrincipal();
+        if (book.isArchived() || !book.isShareable()) {
+            throw new OperationNotPermittedException("YOU can not do this action the book is archived or is not shareable");
+        }
+        if (!Objects.equals(book.getOwner().getId(), user.getId())) {
+            throw new OperationNotPermittedException("The owner can not borrow his book ");
+        }
+        BookTransactionHistory bookTransactionHistory = historyRepository.findByBookIdAndUserIdAndReturn(bookId, user.getId())
+                .orElseThrow(() -> new OperationNotPermittedException("The book is not borrowed by this user"));
+        bookTransactionHistory.setReturnApproved(true);
+        return historyRepository.save(bookTransactionHistory).getId();
+
+    }
+
+    public void uploadCoverBook(MultipartFile file, Integer bookId, Authentication currentUser) {
+        Book book = findById(bookId);
+        User user =(User) currentUser.getPrincipal();
+        var coverPath = storageFileService.saveFile(file,user.getId());
+        book.setBookCover(coverPath);
+        bookRepository.save(book);
     }
 }
