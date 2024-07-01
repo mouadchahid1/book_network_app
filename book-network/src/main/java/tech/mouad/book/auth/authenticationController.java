@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-// todo continue the video on 5:17:00
-// todo rewatch the video from 4:04:00
+
 @Tag(name = "Authentication")
 public class authenticationController {
     private final AuthenticationService authenticationService;

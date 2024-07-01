@@ -20,19 +20,19 @@ import java.util.List;
 @Getter
 @Setter
 public class Book extends BaseEntity {
-    @Column(columnDefinition = "nvarchar")
+    @Column()
     private String title;
 
-    @Column(columnDefinition = "nvarchar")
+    @Column()
     private String authorName;
 
-    @Column(columnDefinition = "nvarchar")
+    @Column()
     private String isbn;
 
-    @Column(columnDefinition = "nvarchar")
+    @Column()
     private String synopsis;
 
-    @Column(columnDefinition = "nvarchar")
+    @Column()
     private String bookCover;
     private boolean archived;
     private boolean shareable;

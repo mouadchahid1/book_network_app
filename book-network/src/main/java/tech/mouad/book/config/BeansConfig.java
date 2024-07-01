@@ -57,7 +57,7 @@ public class BeansConfig {
                 HttpHeaders.CONTENT_TYPE,
                 HttpHeaders.AUTHORIZATION
         ));
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT","PATCH", "DELETE", "OPTIONS"));
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }

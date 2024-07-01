@@ -46,12 +46,15 @@ public class StorageFileService {
         try {
             Files.write(targetFilePath, sourceFile.getBytes());
             log.info("The file add success ful");
+            return finalTargetFile;
         } catch (IOException e) {
             log.error("Error to save the file" + e);
         }
-        return finalTargetFile;
+        return null;
+
     }
 
+    // todo continue the video 5:48
     private String getExtension(String fileName) {
         if (fileName == null || fileName.isEmpty()) {
             return "";
@@ -60,6 +63,6 @@ public class StorageFileService {
         if (lastIndexOf == -1) {
             return "";
         }
-        return fileName.substring(lastIndexOf + 1);
+        return fileName.substring(lastIndexOf + 1).toLowerCase();
     }
 }

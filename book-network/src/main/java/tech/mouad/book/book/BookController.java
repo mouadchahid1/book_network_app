@@ -38,7 +38,7 @@ public class BookController {
     public ResponseEntity<PageResponse<BookResponse>> findAllBooks(
             // j'ai passe le currentUser pour ne pas affiche avec les books global les books de person authenticate
             @RequestParam(name = "page", defaultValue = "0", required = false) short page,
-            @RequestParam(name = "size", defaultValue = "10", required = false) byte size,
+            @RequestParam(name = "size", defaultValue = "10", required = false) short size,
             Authentication currentUser
     ) {
         return ResponseEntity.ok(bookService.findAllBooks(page, size, currentUser));
@@ -47,7 +47,7 @@ public class BookController {
     @GetMapping("/owner")
     public ResponseEntity<PageResponse<BookResponse>> getAllBooksOwner(
             @RequestParam(name = "page", defaultValue = "0", required = false) short page,
-            @RequestParam(name = "size", defaultValue = "10", required = false) byte size,
+            @RequestParam(name = "size", defaultValue = "10", required = false) short size,
             Authentication currentUser
     ) {
         return ResponseEntity.ok(bookService.findAllBooksOwner(page, size, currentUser));
@@ -56,7 +56,7 @@ public class BookController {
     @GetMapping("/borrowed")
     public ResponseEntity<PageResponse<BorrowedBookResponse>> findAllBorrowedBooks(
             @RequestParam(name = "page", defaultValue = "0", required = false) short page,
-            @RequestParam(name = "size", defaultValue = "10", required = false) byte size,
+            @RequestParam(name = "size", defaultValue = "10", required = false) short size,
             Authentication currentUser) {
 
         return ResponseEntity.ok(bookService.findAllBorrowedBooks(page, size, currentUser));
@@ -65,7 +65,7 @@ public class BookController {
     @GetMapping("/returned")
     public ResponseEntity<PageResponse<BorrowedBookResponse>> findAllReturnedBooks(
             @RequestParam(name = "page", defaultValue = "0", required = false) short page,
-            @RequestParam(name = "size", defaultValue = "10", required = false) byte size,
+            @RequestParam(name = "size", defaultValue = "10", required = false) short size,
             Authentication currentUser
     ) {
         return ResponseEntity.ok(bookService.findAllReturnedBooks(page, size, currentUser));

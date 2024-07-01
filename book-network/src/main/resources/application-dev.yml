@@ -8,7 +8,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/book_network
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: false
     properties:
       hibernate:
@@ -33,7 +33,7 @@ application :
   security :
       jwt :
         secretKey : bW91QGRsbTlAd2RiekBmb3V5ZGl6a2ZpaEB6YmlYWxoYWhoaGFoYWg=hWdk1937
-        expiration : 846000
+        expiration : 8460000
   mailing :
     frontend :
       activation-url : http://localhost:4200/activation-email
