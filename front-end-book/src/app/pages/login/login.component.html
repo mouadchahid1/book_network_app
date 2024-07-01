@@ -1,0 +1,40 @@
+<div class="container-fluid card m-auto w-75">
+  <div class="card-header">
+    <h1>Login</h1>
+  </div>
+
+  <div class="card-body">
+    @if (errMsg.length) {
+      <div class="alert alert-danger">
+        @for(err of errMsg;track err){
+          <p class="text-danger"> {{err}}</p>
+        }
+      </div>
+    }
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input type="email" class="form-control" id="email" [(ngModel)]="authRequest.email"
+             name="email" required>
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" class="form-control" id="password" [(ngModel)]="authRequest.password"
+             name="password" required>
+    </div>
+  </div>
+
+  <div class="card-footer d-flex justify-content-between">
+
+    <div>
+      <button class="btn btn-primary" (click)="login()">
+        <i class="bi bi-box-arrow-in-right"></i> &nbsp;Login
+      </button>
+    </div>
+
+    <div>
+      <span class="text-warning">Don't have an account ?</span>
+      <button class="btn btn-link ms-auto" (click)="register()">Register</button>
+    </div>
+
+  </div>
+</div>

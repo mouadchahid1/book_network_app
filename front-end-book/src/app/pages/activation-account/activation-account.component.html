@@ -1,0 +1,26 @@
+@if(submitted) {
+  <div class="container m-auto mt-5 h-100">
+    @if (isOky) {
+      <div class="alert alert-success">
+        <h2 class="tex">Activation Successfully !</h2>
+        <p class="text-success">{{ message }}</p>
+        <button class="btn btn-success" (click)="goToLogin()">Go to Login</button>
+      </div>
+    } @else {
+      <div class="alert alert-danger">
+        <h2 class="text-danger">Activation Failed !</h2>
+        <p class="text-danger">{{ message }}</p>
+        <button class="btn btn-danger" (click)="submitted=false">Try again</button>
+      </div>
+    }
+  </div>
+} @else{
+  <div class="container m-auto mt-5" style="width: 600px">
+    <h1 class="text-dark text-center">Enter the Activation Code</h1>
+    <code-input [isCharsCode]="false"
+                [codeLength]="6"
+                [code]="'number'"
+                (codeCompleted)="onCodeCompleted($event)"
+    ></code-input>
+  </div>
+}
