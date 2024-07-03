@@ -31,4 +31,33 @@ export class BookListComponent implements OnInit {
       }
     })
   }
+
+  get isLastPage() : boolean {
+    return this.page === this.booksList.totalPage as number -1;
+  }
+  goToFirstPage() {
+      this.page = 0 ;
+      this.loadBooks();
+
+  }
+
+  goToPrevious() {
+     this.page-- ;
+     this.loadBooks();
+  }
+
+  goToPage(pageIndex: number) {
+   this.page = pageIndex ;
+   this.loadBooks() ;
+  }
+
+  goToNextPage() {
+    this.page++;
+    this.loadBooks() ;
+  }
+
+  goToLastPage() {
+     this.page = this.booksList.totalPage as number - 1 ;
+     this.loadBooks();
+  }
 }
