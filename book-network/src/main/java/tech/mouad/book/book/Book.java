@@ -56,6 +56,6 @@ public class Book extends BaseEntity {
         }
         double average = feedBacks.stream().mapToDouble(FeedBack::getNote)
                 .average().orElse(0.0);
-        return Math.round((average * 10.0) / 10.0);
+        return ((average * 10.0) / 10.0);
     }
 }

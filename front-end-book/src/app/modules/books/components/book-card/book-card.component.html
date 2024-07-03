@@ -1,0 +1,41 @@
+<div class="card " style="width: 20rem">
+  <img [src]="bookCover" class="card-img-top" height="200" [alt]="book.title"/>
+  <div class="card-body overflow-auto">
+    <h5 class="card-title text-nowrap fs-6 fw-bold mb-1">
+      <i class="bi bi-book"></i> {{ book.title }}
+    </h5>
+    <h6 class="card-subtitle   text-secondary fs-6 fw-bold mb-1">
+      <i class="bi bi-person"></i> {{ book.owner }}
+    </h6>
+    <h6 class="card-subtitle   text-secondary fs-6 fw-bold mb-1">
+      <i class="bi bi-braces-asterisk"></i> {{ book.isbn }}
+    </h6>
+    <h6 class="card-subtitle   text-secondary fs-6 fw-bold mb-1">
+      <i class="bi bi-person-check"></i> {{ book.authorName }}
+    </h6>
+    <hr>
+    <p class="card-text">{{ book.synopsis }}</p>
+  </div>
+  <div class="card-footer d-flex gap-1 justify-content-between align-items-center">
+    <div class="d-flex gap-2">
+      <app-book-stars [rating]="book.rate || 0"></app-book-stars>
+      <span class="fw-bold" *ngIf="book.rate || 0 > 0">
+        {{book.rate}}
+      </span>
+    </div>
+    @if (!manage) {
+      <div class="d-flex gap-2">
+        <i (click)="onShowDetails()" class="bi bi-info-circle-fill text-primary"></i>
+        <i (click)="onBorrow()" class="bi bi-list-check text-primary"></i>
+        <i (click)="onAddToWaitingList()" class="bi bi-heart  text-danger"></i>
+      </div>
+    }
+    @if (manage) {
+      <div class="d-flex gap-2">
+        <i (click)="onEdit()" class="bi bi-pen-fill text-success"></i>
+        <i (click)="onShare()" class="bi bi-share-fill text-primary"></i>
+        <i (click)="onArchive()" class="bi bi-trash-fill text-danger"></i>
+      </div>
+    }
+  </div>
+</div>

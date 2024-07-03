@@ -25,6 +25,7 @@ public class BookService {
     private final BookMapper bookMapper;
     private final BookTransactionHistoryRepository historyRepository;
     private final StorageFileService storageFileService;
+
     public Integer saveBook(BookRequest bookRequest, Authentication currentUser) {
         User user = (User) currentUser.getPrincipal();
         Book book = bookMapper.toBook(bookRequest);
@@ -199,8 +200,11 @@ public class BookService {
 
     public void uploadCoverBook(MultipartFile file, Integer bookId, Authentication currentUser) {
         Book book = findById(bookId);
-        User user =(User) currentUser.getPrincipal();
-        var coverPath = storageFileService.saveFile(file,user.getId());
+        User user = (User) currentUser.getPrincipal();
+        if (!Objects.equals(user.getId(), book.getOwner().getId())) {
+            throw new OperationNotPermittedException("only the owner of the book can upload the cover");
+        }
+        var coverPath = storageFileService.saveFile(file, user.getId());
         book.setBookCover(coverPath);
         bookRepository.save(book);
     }
