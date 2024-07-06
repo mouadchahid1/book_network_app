@@ -54,7 +54,6 @@ public class StorageFileService {
 
     }
 
-    // todo continue the video 5:48
     private String getExtension(String fileName) {
         if (fileName == null || fileName.isEmpty()) {
             return "";

@@ -7,6 +7,11 @@ import { MenuComponent } from './components/menu/menu.component';
 import { BookListComponent } from './pages/book-list/book-list.component';
 import { BookCardComponent } from './components/book-card/book-card.component';
 import { BookStarsComponent } from './components/book-stars/book-stars.component';
+import { MyBooksComponent } from './pages/my-books/my-books.component';
+import { BookManageComponent } from './pages/book-manage/book-manage.component';
+import {FormsModule} from "@angular/forms";
+import { BorrowedBookComponent } from './pages/borrowed-book/borrowed-book.component';
+import { ReturnedBookComponent } from './pages/returned-book/returned-book.component';
 
 
 @NgModule({
@@ -15,11 +20,16 @@ import { BookStarsComponent } from './components/book-stars/book-stars.component
     MenuComponent,
     BookListComponent,
     BookCardComponent,
-    BookStarsComponent
+    BookStarsComponent,
+    MyBooksComponent,
+    BookManageComponent,
+    BorrowedBookComponent,
+    ReturnedBookComponent
   ],
   imports: [
     CommonModule,
-    BooksRoutingModule
+    BooksRoutingModule,
+    FormsModule
   ]
 })
 export class BooksModule { }

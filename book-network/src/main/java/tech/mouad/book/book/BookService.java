@@ -146,7 +146,7 @@ public class BookService {
             throw new OperationNotPermittedException("The book is archived or Not sharable");
         }
         if (Objects.equals(book.getOwner().getId(), user.getId())) {
-            throw new OperationNotPermittedException("The user can't borrow Her book");
+            throw new OperationNotPermittedException("The owner can't borrow Her book");
         }
         final boolean isBookAlreadyBorrow = bookRepository.isBookBorrow(bookId, user.getId());
         if (isBookAlreadyBorrow) {
@@ -158,15 +158,9 @@ public class BookService {
                 .returnApproved(false)
                 .returned(false)
                 .build()).getId();
-
     }
 
     public Integer returnBorrowBook(Integer bookId, Authentication currentUser) {
-        // 1 check if the book exists
-        // 2 check if the book is not archived or no published
-        // 3 check if the borrowed book is not the book of the currentUser
-        // 4 check in the history that this user is already borrowed this book
-        // 5 update
         Book book = findById(bookId);
         User user = (User) currentUser.getPrincipal();
         if (book.isArchived() || !book.isShareable()) {
@@ -176,7 +170,7 @@ public class BookService {
             throw new OperationNotPermittedException("The owner can not borrow his book ");
         }
         BookTransactionHistory bookTransactionHistory = historyRepository.findByBookIdAndUserId(bookId, user.getId())
-                .orElseThrow(() -> new OperationNotPermittedException("The book is not borrowed by this user"));
+                .orElseThrow(() ->  new OperationNotPermittedException("The book is not borrowed by this user"));
         bookTransactionHistory.setReturned(true);
         return historyRepository.save(bookTransactionHistory).getId();
 
@@ -188,7 +182,7 @@ public class BookService {
         if (book.isArchived() || !book.isShareable()) {
             throw new OperationNotPermittedException("YOU can not do this action the book is archived or is not shareable");
         }
-        if (!Objects.equals(book.getOwner().getId(), user.getId())) {
+        if (!Objects.equals(book.getOwner().getId(),user.getId())) {
             throw new OperationNotPermittedException("The owner can not borrow his book ");
         }
         BookTransactionHistory bookTransactionHistory = historyRepository.findByBookIdAndUserIdAndReturn(bookId, user.getId())

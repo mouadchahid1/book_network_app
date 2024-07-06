@@ -24,8 +24,8 @@ public interface BookTransactionHistoryRepository extends JpaRepository<BookTran
 
     @Query("""
                     select transaction from BookTransactionHistory transaction
-                    where transaction.book.id =: bookId
-                    and transaction.user.id =: userId
+                    where transaction.book.id =:bookId
+                    and transaction.user.id =:userId
                     and transaction.returned = false
                     and transaction.returnApproved = false
             """)

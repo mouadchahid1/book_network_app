@@ -26,3 +26,6 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 
   }
 }
+
+export class httpTokenInterceptor {
+}
