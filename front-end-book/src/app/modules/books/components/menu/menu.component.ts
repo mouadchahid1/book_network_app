@@ -1,4 +1,6 @@
 import {Component, OnInit} from '@angular/core';
+import {AuthenticationService} from "../../../../services/services/authentication.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-menu',
@@ -6,13 +8,20 @@ import {Component, OnInit} from '@angular/core';
   styleUrl: './menu.component.scss'
 })
 export class MenuComponent implements OnInit {
+  username!: string;
+
   ngOnInit(): void {
     this.activeRoute();
+    this.username = this.authService.getUsernameFromToken();
+  }
+
+  constructor(private authService: AuthenticationService, private router: Router) {
   }
 
 
   logout() {
-
+    localStorage.removeItem("token");
+    this.router.navigate(["login"]);
   }
 
   activeRoute() {
