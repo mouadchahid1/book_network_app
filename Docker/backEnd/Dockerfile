@@ -29,4 +29,6 @@ CMD java -jar -Dspring.profiles.active=${ACTIVE_PROFILE} -Dspring.datasource.url
 # 1 entre dans le fichier de backend book-network and after that we should run the commande
 # 2 docker build -t bns/bns:1.0.0 -f ../Docker/backEnd/Dockerfile .
 # apres ca tous va marche
+#to pass an argument we can use the following commande
+# docker build   --build-arg APP_VERSION=1.0.3  -t bns/bns:1.0.3 -f ../Docker/backEnd/Dockerfile.
 

@@ -37,7 +37,7 @@ export class ActivationAccountComponent {
            this.isOky = false ;
            this.submitted = true ;
      }
-     // todo continue the video 8:00:00
+
    })
   }
 }
