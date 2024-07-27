@@ -1,3 +1,4 @@
+#run docker-compose up -d
 services:
   mail-dev:
     container_name: mail-dev-bsn
@@ -5,4 +6,41 @@ services:
     ports:
       - 1080:1080
       - 1025:1025
-
+  postgresql-dev:
+    container_name: postgresql-dev-bsn
+    image: postgres:13
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: book_network
+    volumes:
+      - postgres:/data/postgres
+    networks:
+      - book-network
+    restart: unless-stopped
+  bns-api:
+    container_name: bns-api
+    image: bns/bns:1.0.0
+    ports:
+      - 8089:8089
+    networks:
+      - book-network
+    depends_on:
+      - postgresql-dev
+  bsn-ui:
+    container_name: bns-ui
+    image: bns/bns-ui:1.0.0
+    ports:
+      - 4200:80
+    networks:
+      - book-network
+    depends_on:
+      - bns-api
+networks:
+  book-network:
+    driver: bridge
+volumes:
+  postgres:
+    driver: local
