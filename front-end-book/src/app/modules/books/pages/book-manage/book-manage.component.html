@@ -1,0 +1,54 @@
+<h2>Manage Book</h2>
+<hr>
+<div class="alert alert-danger" *ngIf="msgErrors.length">
+  <p class="text-danger" *ngFor="let msg of msgErrors">
+    {{msg}}
+  </p>
+</div>
+
+<div class="d-flex gap-1">
+  <div class="col-3 mt-2">
+    <img [src]="pictureSelected || randomImage() " width="100%" height="50%"
+         class="rounded-1 mb-1" alt="..."/>
+    <input type="file" class="form-control" accept="image/*"
+           (change)="selectImage($event)"
+    >
+  </div>
+  <div class="col-9">
+    <div class="row mt-2">
+      <div class="col-12">
+        <label for="title" class="form-label">Title</label>
+        <input class="form-control" type="text" name="title" id="title"
+               placeholder="Title" [(ngModel)]="bookRequest.title">
+      </div>
+      <div class="col-6 mt-1">
+        <label for="authorName" class="form-label">author Name</label>
+        <input class="form-control" type="text" name="authorName" id="authorName"
+               placeholder="Author Name"
+               [(ngModel)]="bookRequest.authorName">
+      </div>
+      <div class="col-6 mt-1">
+        <label for="isbn" class="form-label">Isbn</label>
+        <input class="form-control" type="text" name="isbn" id="isbn"
+               placeholder="ISBN" [(ngModel)]="bookRequest.isbn">
+      </div>
+      <div class="col-12 my-1">
+        <label for="synopsis" class="form-label"> Synopsis</label>
+        <textarea name="synopsis" [(ngModel)]="bookRequest.synopsis" id="synopsis"
+                  class="form-control" placeholder="Synopsis" cols="30" rows="4"></textarea>
+      </div>
+      <div class="col-12">
+        <input class="form-check-input" [(ngModel)]="bookRequest.shareable" type="checkbox" name="shareable"
+               id="share_me">
+        <label class="form-check-label" for="share_me">Share me </label>
+      </div>
+      <div class="d-flex col-12 justify-content-around">
+
+        <button type="button" class="btn btn-primary" (click)="addBook()">{{update ? "Update" :"Add"}}</button>
+        <button type="reset" class="btn btn-danger ">Cancel</button>
+
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,139 @@
+<h2>My Borrowed Books</h2>
+<hr>
+<div class="row">
+  <div class="d-flex flex-column col-5 mb-3" *ngIf="selectedBorrowBook">
+    <div class="d-flex">
+      <div class="col-2">
+        Title
+      </div>
+      <div class="col-10">{{ selectedBorrowBook?.title }}</div>
+    </div>
+    <div class="d-flex">
+      <div class="col-2">
+        ISBN
+      </div>
+      <div class="col-10">{{ selectedBorrowBook?.isbn }}</div>
+    </div>
+    <div class="d-flex">
+      <div class="col-2">
+        Author Name
+      </div>
+      <div class="col-10">{{ selectedBorrowBook?.authorName }}</div>
+    </div>
+    <div class="d-flex">
+      <div class="col-2">
+        Rate
+      </div>
+      <div class="col-10">
+        <app-book-stars [rating]="selectedBorrowBook?.rate || 0"></app-book-stars>
+        <span class="fw-bold"> {{ selectedBorrowBook?.rate }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 d-flex flex-column  " *ngIf="selectedBorrowBook">
+    <form class="border-left ms-1">
+      <h2>Add FeedBack</h2>
+      <div class="col-12 d-flex gap-3  align-items-center">
+        <label class="form-label" for="rate">Rate</label>
+        <input [(ngModel)]="feedBackRequest.note" type="range" name="rate" id="rate"
+               class="form-range mt-2 w-25" min="0" max="5"
+               step="0.5">
+        <app-book-stars [rating]="feedBackRequest.note || 0"></app-book-stars>
+      </div>
+      <div class="col-12">
+        <label class="form-label" for="comment">Comment</label>
+        <textarea class="form-control" [(ngModel)]="feedBackRequest.comment" name="comment" id="comment" cols="30"
+                  rows="4"
+                  placeholder="Your Comment">
+        </textarea>
+      </div>
+      <div class="col-12 mt-1 d-flex gap-2">
+        <button type="button" (click)="handleReturnBorrowBook(true)" class="btn btn-outline-success">Return And Save
+          Comment
+        </button>
+        <button type="button" (click)="handleReturnBorrowBook(false)" class="btn btn-outline-primary">Returned</button>
+        <button type="button" class="btn btn-outline-danger" (click)="selectedBorrowBook=undefined">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div *ngIf="!selectedBorrowBook">
+  <table class="table table-bordered table-responsive table-hover table-dark">
+    <thead class="text-center">
+    <tr>
+      <th>#</th>
+      <th>Title</th>
+      <th>ISBN</th>
+      <th>Rate</th>
+      <th><i class="bi bi-sliders"></i></th>
+    </tr>
+    </thead>
+    <tbody class="text-center">
+      @for (borrowBook of borrowedBooks.content; track borrowBook; let index = $index) {
+        <tr>
+          <td>{{ index + 1 }}</td>
+          <td>{{ borrowBook.title }}</td>
+          <td>{{ borrowBook.isbn }}</td>
+          <td>
+            <app-book-stars [rating]="borrowBook.rate || 0"></app-book-stars>
+            <span class="fw-bold"> {{ borrowBook.rate }}</span>
+          </td>
+          <td>
+            <div class="d-flex gap-2 justify-content-center align-items-center">
+              <i *ngIf="!borrowBook.returned" (click)="returnBorrowBook(borrowBook)"
+                 class="bi bi-send-x text-primary pointer"></i>
+              <i *ngIf="borrowBook.returned" class="bi bi-send-check text-success pointer"></i>
+              <i class="bi bi-check2-square pointer" [class.text-success]="borrowBook.returnApproved"></i>
+            </div>
+          </td>
+        </tr>
+      } @empty {
+        <p class="text-center text-warning">No books found</p>
+      }
+    </tbody>
+  </table>
+
+  <div class="d-flex justify-content-center mt-4" *ngIf="borrowedBooks">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item">
+          <a class="page-link" href="javascript:void(0)"
+             (click)="goToFirstPage()" aria-label="The first page"
+             [class.disabled]="page === 0"
+          >
+            <i class="bi bi-arrow-left"></i>
+          </a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="javascript:void(0)"
+             (click)="goToPrevious()" aria-label="Previous"
+             [class.disabled]="page === 0">
+            <i class="bi bi-caret-left-fill"></i>
+          </a>
+        </li>
+        <li class="page-item" *ngFor="let _ of [].constructor(borrowedBooks.totalPage);let pageIndex = index">
+          <a class="page-link" href="javascript:void(0)"
+             (click)="goToPage(pageIndex)" aria-label="page Number"
+             [class.active]="page===pageIndex">
+            {{ pageIndex + 1 }}
+          </a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="javascript:void(0)"
+             (click)="goToNextPage()" aria-label="Next"
+             [class.disabled]="isLastPage">
+            <i class="bi bi-caret-right-fill"></i>
+          </a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="javascript:void(0)"
+             (click)="goToLastPage()" aria-label="The last page"
+             [class.disabled]="isLastPage">
+            <i class="bi bi-arrow-right"></i>
+          </a>
+        </li>
+
+      </ul>
+    </nav>
+  </div>
+</div>
