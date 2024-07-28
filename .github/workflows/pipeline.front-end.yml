@@ -1,0 +1,59 @@
+name: Pipeline Frontend
+
+on:
+  push:
+    branches:
+      -c1/pipeline
+    paths:
+      -front-end-book/**
+      -Docker/frontEnd/**
+      -docker-composer.yml
+      -.github/workflows/*-frontend.yml
+
+jobs:
+  build-image:
+    name: Build Frontend Docker Image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Extract Version
+        id: extract_version
+        run: |
+          cd front-end-book
+          echo "VERSION=$(jp -r '.version' package.json)" >> $GITHUB_OUTPUT
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build & Push to dockerHub
+        uses: docker/build-push-action@v5
+        with:
+          context: Docker/frontEnd
+          file: Docker/frontEnd/Dockerfile
+          push: true
+          platform: linux/amd64,linux/arm64
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/bns-ui:${{ steps.extract_version.outputs.VERSION }}
+
+  deploy:
+    name: Deploy Frontend
+    runs-on: ubuntu-latest
+    needs: [ build-image ]
+    steps:
+      - name: Create Deployment folder
+        run: ssh ${{secret.SSH_USERNAME}}@${{secret.SSH_HOST}} "mkdir -p ci-cd"
+
+      - name: Copy the docker composer file
+        run: scp docker-composer.yml ${{secret.SSH_USERNAME}}@${{secret.SSH_HOST}}:ci-cd/docker-composer.yml
+
+      - name: Set ENV variable and deploy
+        run: |
+          ssh ${{secret.SSH_USERNAME}}@${{secret.SSH_HOST}} <<EOF
+          cd ci-cd
+          docker-compose -f docker-composer.yml pull -q
+          docker-compose -f docker-composer.yml up -d
+          EOF

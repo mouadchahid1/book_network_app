@@ -10,6 +10,7 @@ import {RegisterComponent} from './pages/register/register.component';
 import {ActivationAccountComponent} from './pages/activation-account/activation-account.component';
 import {CodeInputModule} from "angular-code-input";
 import {HttpTokenInterceptor} from "./services/interceptor/http-token.interceptor";
+import {ApiModule} from "./services/api.module";
 
 @NgModule({
   declarations: [
@@ -25,7 +26,9 @@ import {HttpTokenInterceptor} from "./services/interceptor/http-token.intercepto
     ReactiveFormsModule,
     FormsModule,
     ReactiveFormsModule,
-    CodeInputModule
+    CodeInputModule,
+    // here we should add the address ip of our vps or the domain name
+    ApiModule.forRoot({rootUrl:"http://localhost:8089/api/v1"})
   ],
   providers: [HttpClient,
     {provide: HTTP_INTERCEPTORS, useClass: HttpTokenInterceptor, multi: true}
