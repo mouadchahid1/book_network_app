@@ -15,10 +15,10 @@ spring:
         format_sql: true
     database: postgresql
   mail:
-    host: localhost
+    host: ${EMAIL_HOSTNAME}
     port: 1025
-    username: mouad
-    password: mouad
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
     properties:
       mail:
         smtp:
@@ -40,3 +40,5 @@ application :
   file :
     path:
       photo-path : ./uploads
+  origin :
+    allowed : http://localhost:4200,http://localhost:8080 # Add the frontend URL here the address ip for the vps

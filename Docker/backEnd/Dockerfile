@@ -17,6 +17,9 @@ WORKDIR /app
 ENV ACTIVE_PROFILE=${PROFILE}
 ENV JAR_VERSION=${APP_VERSION}
 ENV DB_URL=jdbc:postgresql://postgresql-dev-bsn:5432/book_network
+ENV EMAIL_HOSTNAME=missing_host_name
+ENV EMAIL_USERNAME=missing_username
+ENV EMAIL_PASSWORD=missing_password
 
 #the port
 EXPOSE 8089
