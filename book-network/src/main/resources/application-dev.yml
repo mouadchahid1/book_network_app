@@ -15,10 +15,10 @@ spring:
         format_sql: true
     database: postgresql
   mail:
-    host: ${EMAIL_HOSTNAME}
+    host: localhost
     port: 1025
-    username: ${EMAIL_USERNAME}
-    password: ${EMAIL_PASSWORD}
+    username: mouad
+    password: mouad
     properties:
       mail:
         smtp:

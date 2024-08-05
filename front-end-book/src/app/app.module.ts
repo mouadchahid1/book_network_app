@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -11,6 +11,14 @@ import {ActivationAccountComponent} from './pages/activation-account/activation-
 import {CodeInputModule} from "angular-code-input";
 import {HttpTokenInterceptor} from "./services/interceptor/http-token.interceptor";
 import {ApiModule} from "./services/api.module";
+import {KeycloakService} from "./services/keycloak/keycloak.service";
+
+
+export function  kcFactory (kcService:KeycloakService) {
+  return ()=> {
+    kcService.init();
+  }
+}
 
 @NgModule({
   declarations: [
@@ -31,7 +39,8 @@ import {ApiModule} from "./services/api.module";
     ApiModule.forRoot({rootUrl:"http://localhost:8089/api/v1"})
   ],
   providers: [HttpClient,
-    {provide: HTTP_INTERCEPTORS, useClass: HttpTokenInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: HttpTokenInterceptor, multi: true},
+    {provide:APP_INITIALIZER,deps:[KeycloakService],useFactory:kcFactory,multi:true}
   ],
   bootstrap: [AppComponent]
 })

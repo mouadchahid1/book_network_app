@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthenticationService} from "../../../../services/services/authentication.service";
 import {Router} from "@angular/router";
+import {KeycloakService} from "../../../../services/keycloak/keycloak.service";
 
 @Component({
   selector: 'app-menu',
@@ -15,13 +16,13 @@ export class MenuComponent implements OnInit {
     this.username = this.authService.getUsernameFromToken();
   }
 
-  constructor(private authService: AuthenticationService, private router: Router) {
+  constructor(private authService: AuthenticationService, private router: Router,
+              private keycloakService: KeycloakService) {
   }
 
 
-  logout() {
-    localStorage.removeItem("token");
-    this.router.navigate(["login"]);
+  async logout() {
+    this.keycloakService.logout();
   }
 
   activeRoute() {
